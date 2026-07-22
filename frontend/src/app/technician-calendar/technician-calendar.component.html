@@ -1,0 +1,45 @@
+<div class="card">
+  <h2>Technicians</h2>
+  <ul>
+    <li *ngFor="let tech of technicians">
+      <button (click)="selectTechnician(tech.id)"
+              [style.fontWeight]="tech.id === selectedTechnicianId ? 'bold' : 'normal'">
+        {{ tech.name }} ({{ tech.region }})
+      </button>
+    </li>
+  </ul>
+</div>
+
+<div class="card" *ngIf="selectedTechnicianId !== null">
+  <h3>Scheduled jobs</h3>
+  <table *ngIf="jobs.length > 0">
+    <thead>
+      <tr><th>Customer</th><th>Start</th><th>End</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let job of jobs">
+        <td>{{ job.customerName }}</td>
+        <td>{{ job.startTime }}</td>
+        <td>{{ job.endTime }}</td>
+        <td>{{ job.status }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <p *ngIf="jobs.length === 0">No jobs scheduled yet.</p>
+
+  <h3>Book a new job</h3>
+  <label>
+    Customer name
+    <input type="text" [(ngModel)]="newCustomerName" name="customerName">
+  </label>
+  <label>
+    Start time
+    <input type="datetime-local" [(ngModel)]="newStartTime" name="startTime">
+  </label>
+  <label>
+    End time
+    <input type="datetime-local" [(ngModel)]="newEndTime" name="endTime">
+  </label>
+  <button (click)="bookJob()">Book job</button>
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+</div>

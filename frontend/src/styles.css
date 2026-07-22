@@ -1,0 +1,47 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  margin: 0;
+  background: #f5f6f8;
+  color: #1a1a1a;
+}
+
+.app-shell {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+h1, h2, h3 {
+  font-weight: 600;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+button {
+  background: #2b6cb0;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #2c5282;
+}
+
+input, label {
+  display: block;
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+.error {
+  color: #c53030;
+}
