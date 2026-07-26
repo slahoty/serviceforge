@@ -19,6 +19,12 @@ That one line is the only input. Everything else below is how it gets turned int
 - **What it does:** takes the raw intent, asks what it needs to (scope, dependencies on prior features, definition of done), and commits a new file at `pipeline/features/feature-N-<slug>.md` following the same template as `pipeline/features/feature-1-technician-availability.md`.
 - **What it must check first:** every existing file under `pipeline/features/` and `pipeline/decisions/`, so the new spec correctly names what it depends on instead of guessing.
 - **Output:** one committed spec file. Nothing gets built yet.
+- **If it halts:** the BA agent returns `STATUS: BLOCKED` and writes no file.
+    This is a **terminal** result for step 1, not a failure to retry.
+    Surface the questions to the human and stop the pipeline.
+    Do not re-invoke the BA agent, do not proceed to step 2, and do not
+    substitute your own answers to its questions. Resume only after the
+    human replies, by re-invoking the BA agent with those answers.
 
 ### 2 — Developer (turns the spec into code)
 
