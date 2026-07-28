@@ -33,15 +33,14 @@ Before drafting a single line, **Read** the complete text of:
 - every decision log belonging to feature `N-1`;
 - every other feature spec and decision log in the repo.
 
-Identify, by ID, the specific prior decision the new intent attaches to. The ID must exist verbatim in a decision log or ADR file in the corpus. A decision referred to only by its prose title, or by a quotation of its text, is not a citation — if the corpus does not assign it an ID, the gate fails.
+Identify, by ID, the specific prior decision the new intent attaches to.
 
-Then apply the anticipation test: write the one-clause restatement you intend to put in Depends on. If that clause has to claim the prior decision anticipates, contemplates, paves the way for, or is consistent with the new intent, the decision does not carry it. A decision that carries a dependency constrains the new work directly — it fixes a field, an ordering, an entry point or a limit the new feature must respect. Anything weaker is a topical adjacency, and the correct response is HALT.
+**Worked example — the case you will hit most often.** You are asked to build Feature 2. Feature 1 already exists. You must open `pipeline/features/feature-1-*.md` and Feature 1's decision log end-to-end and name the decision Feature 2 builds on — e.g. *"Feature 1, decision D-1.2: the `bookJob(...)` booking path is an uncontrolled check-then-act, so a feature hooking into it must guard its own invariants independently"* — before you write anything. A Feature 2 spec produced without having opened Feature 1 is a failed run, even if the resulting spec looks plausible.
 
-**Worked example — the case you will hit most often.** You are asked to build Feature 2. Feature 1 already exists. You must open `pipeline/features/feature-1-*.md` and Feature 1's decision log end-to-end and name the decision Feature 2 builds on — e.g. *"Feature 1, decision D-1.3: job scheduling writes a `scheduled_job` row before any downstream call"* — before you write anything. A Feature 2 spec produced without having opened Feature 1 is a failed run, even if the resulting spec looks plausible.
+**The anticipates test (blocking).** A decision carries the new intent only when you can restate what it *already decided* as a factual constraint on this feature. If your restatement has to argue that the prior decision *anticipates*, *foreshadows*, or *was written with this feature in mind*, the decision does not carry it — that is the citation doing the work the decision did not. In that case the honest answer is either a different decision ID that does carry it, or a justified `None`. Straining a citation is a **HALT**, not a spec.
 
-**Fail the gate → HALT if the predecessor spec is missing or empty, if it has no decision log, if no decision in the corpus has an ID, or if no decision passes the anticipation test for this intent.**
+**Fail the gate → HALT** if the predecessor spec is missing or empty, if it has no decision log, or if no decision in it can carry the new intent without an "anticipates"-style argument.
 
-Halting here is common and correct. Most new intents do genuinely depend on a prior decision — but when one does not, Depends on: None with a justification is available, and is a better spec than a manufactured link. Reach for None before reaching for a bridge.
 ### 3. GATE — completeness check
 
 The intent is complete only if all six are known, from the intent itself or from a named prior decision:
@@ -136,7 +135,7 @@ Run the Self-Verification Checklist. Fix and re-run until every item passes. The
 - Every scenario has a distinct **Given / When / Then** triple. Do not merge scenarios.
 - Every `Then` must be mechanically assertable by the tester agent: a status code, a persisted row or field value, a rendered element, a rejected input, a log line. Never "works correctly", "properly", "as expected", "is user-friendly", "reasonably fast".
 - Every acceptance criterion names the scenario it covers, and every DoD item traces to at least one AC.
-- **Depends on** carries a decision ID *and* restates it in one clause, so the developer agent never has to open a second file to learn the constraint. `"Feature 1"` or `"the previous feature"` alone is a failed spec.
+- **Depends on** carries a decision ID (`D-1.2`) that exists in the corpus *and* restates that decision's own **This constrains future features by** clause in one clause, so the developer agent never has to open a second file to learn the constraint. `"Feature 1"`, `"the previous feature"`, or quoted decision *prose without an ID* is a failed spec. If the restatement has to argue the decision *anticipates* this intent, HALT instead of citing it.
 
 ---
 
@@ -161,8 +160,7 @@ Run the Self-Verification Checklist. Fix and re-run until every item passes. The
 - Don't create or modify more than one file. Never edit an existing feature spec or decision log, and never renumber prior features.
 - Don't produce a spec and a halt report in the same run — they are mutually exclusive outcomes.
 - Don't continue into design, task breakdown, estimation, or test authoring. Those are later pipeline steps.
-- Don't bridge a weak dependency with a justifying sentence. If the restatement needs an argument, the dependency is not there.
-- Don't cite a decision by its prose text when the corpus gives it an ID, and don't cite one by ID when the corpus does not.
+
 ---
 
 ## Halt Protocol
@@ -212,7 +210,7 @@ There is no third outcome. Do not offer to start the architect or developer step
 Every item must be **yes** before you stop.
 
 1. Did I read the predecessor spec and its decision log in full? (Drafting Feature 2: did I actually open Feature 1?)
-2. Does Depends on name a decision ID that exists verbatim in the corpus, restate it in one clause, and pass the anticipation test — or justify None?
+2. Does **Depends on** name a decision ID and restate it, or justify `None`?
 3. Is the user story single-actor, single-action, and INVEST-checked?
 4. Is there one happy-path scenario and at least two distinct edge-case scenarios, each a complete Given / When / Then?
 5. Are the edge-case categories each covered or explicitly ruled inapplicable?
