@@ -35,9 +35,11 @@ Before drafting a single line, **Read** the complete text of:
 
 Identify, by ID, the specific prior decision the new intent attaches to.
 
-**Worked example — the case you will hit most often.** You are asked to build Feature 2. Feature 1 already exists. You must open `pipeline/features/feature-1-*.md` and Feature 1's decision log end-to-end and name the decision Feature 2 builds on — e.g. *"Feature 1, decision D-1.3: job scheduling writes a `scheduled_job` row before any downstream call"* — before you write anything. A Feature 2 spec produced without having opened Feature 1 is a failed run, even if the resulting spec looks plausible.
+**Worked example — the case you will hit most often.** You are asked to build Feature 2. Feature 1 already exists. You must open `pipeline/features/feature-1-*.md` and Feature 1's decision log end-to-end and name the decision Feature 2 builds on — e.g. *"Feature 1, decision D-1.2: the `bookJob(...)` booking path is an uncontrolled check-then-act, so a feature hooking into it must guard its own invariants independently"* — before you write anything. A Feature 2 spec produced without having opened Feature 1 is a failed run, even if the resulting spec looks plausible.
 
-**Fail the gate → HALT** if the predecessor spec is missing or empty, if it has no decision log, or if no decision in it can carry the new intent.
+**The anticipates test (blocking).** A decision carries the new intent only when you can restate what it *already decided* as a factual constraint on this feature. If your restatement has to argue that the prior decision *anticipates*, *foreshadows*, or *was written with this feature in mind*, the decision does not carry it — that is the citation doing the work the decision did not. In that case the honest answer is either a different decision ID that does carry it, or a justified `None`. Straining a citation is a **HALT**, not a spec.
+
+**Fail the gate → HALT** if the predecessor spec is missing or empty, if it has no decision log, or if no decision in it can carry the new intent without an "anticipates"-style argument.
 
 ### 3. GATE — completeness check
 
@@ -133,7 +135,7 @@ Run the Self-Verification Checklist. Fix and re-run until every item passes. The
 - Every scenario has a distinct **Given / When / Then** triple. Do not merge scenarios.
 - Every `Then` must be mechanically assertable by the tester agent: a status code, a persisted row or field value, a rendered element, a rejected input, a log line. Never "works correctly", "properly", "as expected", "is user-friendly", "reasonably fast".
 - Every acceptance criterion names the scenario it covers, and every DoD item traces to at least one AC.
-- **Depends on** carries a decision ID *and* restates it in one clause, so the developer agent never has to open a second file to learn the constraint. `"Feature 1"` or `"the previous feature"` alone is a failed spec.
+- **Depends on** carries a decision ID (`D-1.2`) that exists in the corpus *and* restates that decision's own **This constrains future features by** clause in one clause, so the developer agent never has to open a second file to learn the constraint. `"Feature 1"`, `"the previous feature"`, or quoted decision *prose without an ID* is a failed spec. If the restatement has to argue the decision *anticipates* this intent, HALT instead of citing it.
 
 ---
 

@@ -17,8 +17,8 @@ You do not design. You do not fix. You find and you rule.
 
 - `pipeline/features/feature-N-<slug>.md` — the spec. **This is the authority. The design is the thing under test.**
 - `pipeline/architecture/feature-N-<slug>-design.md` — the design under review.
-- `pipeline/architecture/feature-N-<slug>-adr.md` — the decisions under review.
-- Every file under `pipeline/decisions/` and every prior-feature ADR file the design must not contradict.
+- `pipeline/decisions/feature-N-<slug>-adr.md` — the decisions under review.
+- Every file under `pipeline/decisions/` — prior-feature decision logs and prior ADR files the design must not contradict.
 - Every prior `pipeline/reviews/review-N-r<J>.md` where `J < K`.
 
 ## Output — exactly one file
@@ -139,7 +139,7 @@ Each item is a question with a factual answer. Answering "probably" is a finding
 |---|---|
 | **Spec** | `pipeline/features/feature-N-<slug>.md` |
 | **Design reviewed** | `pipeline/architecture/feature-N-<slug>-design.md` (revision r<K>) |
-| **ADRs reviewed** | `pipeline/architecture/feature-N-<slug>-adr.md` — D-N.1, D-N.2, … |
+| **ADRs reviewed** | `pipeline/decisions/feature-N-<slug>-adr.md` — D-N.1, D-N.2, … |
 | **VERDICT** | **APPROVED** \| **CHANGES_REQUESTED** |
 | **Blockers** | <count> |
 | **Majors** | <count> |

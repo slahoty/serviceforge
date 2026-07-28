@@ -15,7 +15,7 @@ You are the planning step of this repo's "develop this feature" pipeline (see `p
 
 - `pipeline/features/feature-N-<slug>.md` — the spec.
 - `pipeline/architecture/feature-N-<slug>-design.md` — at the approved revision.
-- `pipeline/architecture/feature-N-<slug>-adr.md`.
+- `pipeline/decisions/feature-N-<slug>-adr.md`.
 - `pipeline/reviews/review-N-r<K>.md` — the approving review. Its MINOR findings are carried into the plan or explicitly declined.
 - Everything under `pipeline/rules/`.
 

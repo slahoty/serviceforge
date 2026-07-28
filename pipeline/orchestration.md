@@ -12,12 +12,12 @@ That one line is the only input.
 
 ## Artifact map
 
-Each step reads the step before it and writes exactly one kind of artifact.
+Each step reads the step before it and writes its own artifact. Every step but the architect writes a single file; the architect writes a matched pair — the design and its ADRs.
 
 | Step | Agent | Reads | Writes |
 |---|---|---|---|
 | 1 | BA | intent + all prior features and decisions | `pipeline/features/feature-N-<slug>.md` |
-| 2 | Architect | approved spec + all decisions + prior designs (+ review findings on a re-run) | `pipeline/architecture/feature-N-<slug>-design.md` + `pipeline/architecture/feature-N-<slug>-adr.md` |
+| 2 | Architect | approved spec + all decisions + prior designs (+ review findings on a re-run) | `pipeline/architecture/feature-N-<slug>-design.md` + `pipeline/decisions/feature-N-<slug>-adr.md` |
 | 3 | Architecture Review | spec + design + ADRs + prior reviews | `pipeline/reviews/review-N-r<K>.md` |
 | 4 | Planner | spec + approved design + ADRs + approving review + rules | `pipeline/plans/plan-N-<slug>.md` |
 | 5 | Developer | plan + spec + design + ADRs + rules | code |
@@ -31,8 +31,8 @@ Steps 2 and 3 form a loop. **The pipeline cannot pass step 3 without an `APPROVE
 pipeline/
   orchestration.md          this file
   features/                 BA output — one file per feature
-  architecture/             architect output — one design + one ADR file per feature
-  decisions/                prior-feature decision logs
+  architecture/             architect output — one design file per feature
+  decisions/                prior-feature decision logs + architect ADR files (feature-N-<slug>-adr.md)
   reviews/                  review output — one file per revision
   plans/                    planner output — one plan per feature
   rules/                    standing rules, written after shipped bugs

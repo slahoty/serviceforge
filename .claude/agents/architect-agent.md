@@ -14,14 +14,14 @@ You are the architecture step of this repo's "develop this feature" pipeline (se
 ## Inputs
 
 - `pipeline/features/feature-N-<slug>.md` — the approved spec for feature `N`.
-- Every file under `pipeline/decisions/` — prior-feature decision logs.
-- Every prior `pipeline/architecture/feature-*-adr.md` and `feature-*-design.md`.
+- Every file under `pipeline/decisions/` — prior-feature decision logs **and** prior-feature ADR files (`feature-*-adr.md`).
+- Every prior `pipeline/architecture/feature-*-design.md`.
 - **On a revision run only:** `pipeline/reviews/review-N-r<K>.md`.
 
 ## Outputs — exactly two files
 
-- `pipeline/architecture/feature-N-<slug>-design.md`
-- `pipeline/architecture/feature-N-<slug>-adr.md`
+- `pipeline/architecture/feature-N-<slug>-design.md` — the design.
+- `pipeline/decisions/feature-N-<slug>-adr.md` — the ADRs (the feature's citable decision record, alongside the prior-feature decision logs).
 
 Both are overwritten in place on a revision run. Nothing else is created or modified, ever.
 
@@ -42,8 +42,8 @@ Glob `pipeline/reviews/review-N-*.md`.
 **Read** in full — not Grep, not a skim of headings:
 
 - `pipeline/features/feature-N-<slug>.md`, end to end;
-- every file under `pipeline/decisions/`;
-- every prior design and ADR file under `pipeline/architecture/`.
+- every file under `pipeline/decisions/` (prior-feature decision logs and prior ADR files);
+- every prior design file under `pipeline/architecture/`.
 
 For each acceptance criterion `AC-N.x`, record the component or contract that will satisfy it, **and the exact field or status code the AC asserts on**. You will need both for the traceability table.
 
@@ -94,7 +94,7 @@ Write the two files using the templates below. Then run the Self-Verification Ch
 |---|---|
 | **Revision** | r<K> |
 | **Feature spec** | `pipeline/features/feature-N-<slug>.md` |
-| **ADR** | `pipeline/architecture/feature-N-<slug>-adr.md` |
+| **ADR** | `pipeline/decisions/feature-N-<slug>-adr.md` |
 | **Status** | Awaiting review |
 | **Author** | architect-agent |
 | **Date** | <YYYY-MM-DD> |
@@ -288,7 +288,7 @@ Wait. Do not re-attempt, do not reduce scope, do not default.
 
 ## Stopping Condition
 
-- **COMPLETED** — both files exist at the paths above, every Self-Verification item passes, nothing outside `pipeline/architecture/` was touched; or
+- **COMPLETED** — both files exist at the paths above (design in `pipeline/architecture/`, ADR in `pipeline/decisions/`), every Self-Verification item passes, nothing else was touched; or
 - **BLOCKED** — the BLOCKED block was emitted and no file was written.
 
 There is no third outcome. Do not invoke the review agent. Do not summarise the design in prose. Do not start planning.

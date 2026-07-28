@@ -2,10 +2,14 @@
 
 | Field | Value |
 |---|---|
-| **Spec** | `pipeline/features/feature-2-job-parts-reservation.md` |
+| **Revision** | r1 |
+| **Feature spec** | `pipeline/features/feature-2-job-parts-reservation.md` |
 | **ADR** | `pipeline/decisions/feature-2-job-parts-reservation-adr.md` |
-| **Status** | Ready for development |
-| **Inherited constraints** | Feature 1, "standard travel buffer per job is 45 minutes" — `TRAVEL_BUFFER_MINUTES` stays untouched; this feature hooks into `bookJob(...)` without altering the overlap/buffer policy. `D-2.1` — the entire part resolve + availability-check + reserve runs inside one `synchronized` block. `D-2.2` — unknown reference → 404, insufficient stock → 409, malformed input → 400, reusing Feature 1's exception-to-status mapping. `D-2.3` — `Job` and `BookJobRequest` gain `requiredParts` as a backward-compatible, empty-by-default extension. |
+| **Status** | Awaiting review |
+| **Author** | architect-agent |
+| **Date** | 2026-07-28 |
+| **Inherited constraints** | **D-1.1** — the 45-minute `TRAVEL_BUFFER_MINUTES` overlap policy stays untouched; this feature hooks into `bookJob(...)` without altering the overlap/buffer logic. **D-1.2** — `bookJob(...)` is an uncontrolled check-then-act with no booking-level serialization, so this feature guards its own reservation invariant independently (see D-2.1) rather than assuming the booking path serializes. |
+| **Decisions raised** | D-2.1, D-2.2, D-2.3 |
 
 ## 1. Scope of change
 
@@ -159,8 +163,8 @@ Pointer only. Every citable decision is authored in the ADR under `pipeline/deci
 | ID | Title | Authored in |
 |---|---|---|
 | D-2.1 | Multi-part stock check and reserve run inside one `synchronized` block | `pipeline/decisions/feature-2-job-parts-reservation-adr.md` |
-| D-2.2 | Parts error mapping reuses Feature 1's convention: unknown → 404, insufficient → 409, malformed → 400 | same file, Secondary binding decisions |
-| D-2.3 | `Job` and `BookJobRequest` gain `requiredParts` as a backward-compatible, empty-by-default extension | same file, Secondary binding decisions |
+| D-2.2 | Parts error mapping reuses Feature 1's convention: unknown → 404, insufficient → 409, malformed → 400 | `pipeline/decisions/feature-2-job-parts-reservation-adr.md` |
+| D-2.3 | `Job` and `BookJobRequest` gain `requiredParts` as a backward-compatible, empty-by-default extension | `pipeline/decisions/feature-2-job-parts-reservation-adr.md` |
 
 ## 10. Traceability
 
@@ -181,3 +185,9 @@ Pointer only. Every citable decision is authored in the ADR under `pipeline/deci
 - **Do not** put a `synchronized` keyword on the availability read but call the increment outside the lock, and **do not** reserve part-by-part with an early increment then a rollback on a later shortage — either reintroduces the check-then-act race (S-2.5) or a partial-reservation window (S-2.2). One block, all checks before any write.
 - **Do not** add a `GET /api/parts` endpoint or any parts CRUD UI to satisfy the tester — part state is asserted through the injected `MockDataStore` bean; a read API is out of scope.
 - **Do not** touch `TRAVEL_BUFFER_MINUTES` or the interval-overlap logic; the parts check is added alongside it, not in its place.
+
+## 12. Revision Log
+
+| Revision | Finding addressed | What changed |
+|---|---|---|
+| r1 | — | Initial design. Reviewed at `pipeline/reviews/review-2-r1.md` (APPROVED, 0 blockers, 0 majors, 2 minors — both carried into the plan, see F-2.r1.1 / F-2.r1.2). |

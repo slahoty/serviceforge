@@ -327,7 +327,7 @@
 | **Advances** | AC-2.5 |
 | **Files** | `backend/src/test/java/com/serviceforge/...` |
 
-**Do:** Using part 3 (on-hand 2), submit two bookings concurrently (two threads, e.g. via `ExecutorService` + `CountDownLatch`), each requiring `{partId 3, qty 2}`, for non-overlapping slots (so the technician-overlap check does not interfere). Assert: exactly one booking succeeds (201, reserves), the other throws `IllegalStateException` / 409; part 3 final `quantityReserved` equals 2 and never exceeds `quantityOnHand` (2).
+**Do:** This is a **service-level** test (it exercises `TechnicianAvailabilityService.bookJob(...)` / `PartsReservationService.reserveForJob(...)` directly, not the HTTP layer — assert the exception the service throws, not a status code; the 409 mapping is covered by the controller tests T-2.12). Using part 3 (on-hand 2), invoke two bookings concurrently (two threads, e.g. via `ExecutorService` + `CountDownLatch`), each requiring `{partId 3, qty 2}`, for non-overlapping slots (so the technician-overlap check does not interfere). Assert: exactly one call returns a saved `Job` (reserving part 3), the other throws `IllegalStateException`; part 3 final `quantityReserved` equals 2 and never exceeds `quantityOnHand` (2).
 
 **Constrained by:** D-2.1 — the `synchronized` block makes this deterministic; do not weaken the assertion to "at most one" if the seed guarantees exactly one.
 
